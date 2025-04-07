@@ -46,13 +46,15 @@ public class EspacioParqueaderoRepository {
        return disponibles;
     }
     
-    public List<EspacioParqueadero> findByTipoVehiculo(String tipo){
-        List<EspacioParqueadero> resultado = new ArrayList<>();
-        for (EspacioParqueadero ep : baseDeDatos.values()){
-            if(ep.getTipoVehiculoPermitido().equalsIgnoreCase(tipo)){
-                resultado.add(ep);
-            }
+   public List<EspacioParqueadero> findByTipoVehiculo(String tipoVehiculo) {
+    List<EspacioParqueadero> lista = new ArrayList<>();
+    for (EspacioParqueadero espacio : baseDeDatos.values()) {
+        if (espacio.getTipoVehiculoPermitido().equalsIgnoreCase(tipoVehiculo)) {
+            lista.add(espacio);
         }
-        return resultado;
     }
+    return lista;
+}
+
+
 }
