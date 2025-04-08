@@ -22,11 +22,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Vehículos", description = "Operaciones relacionadas con vehículos")
 @RestController
 @RequestMapping("/api/vehiculos")
-@Tag(name = "Productos", description = "API para la gestión de vehiculos")
+@Tag(name = "Parqueadero", description = "API para la gestión de vehiculos")
 public class VehiculoController {
 
     private final VehiculoService vehiculoService;
 
+    //constructor para vehiculocontroller
     @Autowired
     public VehiculoController(VehiculoService vehiculoService) {
         this.vehiculoService = vehiculoService;

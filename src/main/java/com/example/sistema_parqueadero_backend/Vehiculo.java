@@ -2,6 +2,7 @@ package com.example.sistema_parqueadero_backend;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+
 import java.util.UUID;
 public class Vehiculo {
 

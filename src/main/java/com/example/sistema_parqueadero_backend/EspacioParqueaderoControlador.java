@@ -22,31 +22,31 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author judav
  */
-@Tag(name = "Estado Parqueadero", description = "Operaciones relacionadas con el parqueadero")
+@Tag(name = "Parqueadero", description = "API para la gestión de parqueadero")
 @RestController
 @RequestMapping("/api/parqueadero")
-@Tag(name = "Parqueadero", description = "API para la gestión de parqueadero")
 public class EspacioParqueaderoControlador {
-    
+
     private final EspacioParqueaderoService espacioparqueaderoservice;
-    
+
     @Autowired
     public EspacioParqueaderoControlador(EspacioParqueaderoService espacioparqueaderoservice){
         this.espacioparqueaderoservice = espacioparqueaderoservice;
     }
-    
-     // ✅ Ocupar nuevo espacio
-     @PostMapping
-    @Operation(summary = "Nuevo Parqueadero", description = "Verificar si el parqueadero esta ocupado.")
+
+    // ✅ Ocupar nuevo espacio
+    @PostMapping
+    @Operation(summary = "Nuevo Parqueadero", description = "Verificar si el parqueadero está ocupado.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Parqueadero ocupado"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
-    public ResponseEntity<EspacioParqueadero> guardarEspacio(@RequestBody @Parameter(description = "")EspacioParqueadero espacio) {
+    public ResponseEntity<EspacioParqueadero> guardarEspacio(
+            @RequestBody @Parameter(description = "Datos del espacio") EspacioParqueadero espacio) {
         EspacioParqueadero nuevoParqueadero = espacioparqueaderoservice.guardarEspacio(espacio);
         return new ResponseEntity<>(nuevoParqueadero, HttpStatus.CREATED);
     }
-    
+
     // ✅ Obtener todos los parqueaderos
     @GetMapping
     @Operation(summary = "Obtener todos los espacios", description = "Devuelve una lista de todos los espacios.")
@@ -57,34 +57,36 @@ public class EspacioParqueaderoControlador {
     public ResponseEntity<List<EspacioParqueadero>> obtenerTodos() {
         return ResponseEntity.ok(espacioparqueaderoservice.obtenerTodos());
     }
-    
-     // ✅ Buscar por numero
+
+    // ✅ Buscar por número
     @GetMapping("/numero/{numero}")
-    @Operation(summary = "Obtener espacios por numero", description = "Devuelve un espacio específico basado en su numero.")
+    @Operation(summary = "Obtener espacios por número", description = "Devuelve un espacio específico basado en su número.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Espacio encontrado"),
             @ApiResponse(responseCode = "404", description = "Espacio no encontrado")
     })
-    public ResponseEntity<EspacioParqueadero> buscarPorNumero(@PathVariable@Parameter(description = " numero del espacio")int numero) {
+    public ResponseEntity<EspacioParqueadero> buscarPorNumero(
+            @PathVariable @Parameter(description = "Número del espacio") int numero) {
         EspacioParqueadero espacioparqueadero = espacioparqueaderoservice.buscarPorNumero(numero);
         return ResponseEntity.ok(espacioparqueadero);
     }
-    
-      // ✅ Eliminar por numero
+
+    // ✅ Eliminar por número
     @DeleteMapping("/numero/{numero}")
-    @Operation(summary = "Eliminar un espacio", description = "Elimina un espacio basado en su numero.")
+    @Operation(summary = "Eliminar un espacio", description = "Elimina un espacio basado en su número.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Espacio eliminado con éxito"),
-            @ApiResponse(responseCode = "404", description = "Espacio  no encontrado")
+            @ApiResponse(responseCode = "404", description = "Espacio no encontrado")
     })
-    public ResponseEntity<Void> eliminarPorNumero(@PathVariable @Parameter(description = "Numero del espacio") int numero) {
+    public ResponseEntity<Void> eliminarPorNumero(
+            @PathVariable @Parameter(description = "Número del espacio") int numero) {
         espacioparqueaderoservice.eliminarPorNumero(numero);
         return ResponseEntity.noContent().build();
     }
-    
-    // ✅ Obtener todos los espacios
-    @GetMapping
-    @Operation(summary = "Obtener todos los espacios", description = "Devuelve una lista de todos los espacios disponibles.")
+
+    // ✅ Obtener todos los espacios disponibles (corregido con nueva ruta)
+    @GetMapping("/disponibles")
+    @Operation(summary = "Obtener espacios disponibles", description = "Devuelve una lista de todos los espacios disponibles.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de espacios obtenida con éxito"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
@@ -92,14 +94,16 @@ public class EspacioParqueaderoControlador {
     public ResponseEntity<List<EspacioParqueadero>> obtenerDisponibles() {
         return ResponseEntity.ok(espacioparqueaderoservice.obtenerDisponibles());
     }
-    
-   @GetMapping("/tipo/{tipoVehiculo}")
-   @Operation(summary = "Obtener por tipo", description = "Devuelve una lista de todos los espacios del tipo indicado.")
-   @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Lista obtenida con éxito"),
-    @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-   })
-    public ResponseEntity<List<EspacioParqueadero>> obtenerPorTipo(@PathVariable("tipoVehiculo") String tipoVehiculoPermitido) {
-    return ResponseEntity.ok(espacioparqueaderoservice.obtenerPorTipo(tipoVehiculoPermitido));
+
+    // ✅ Obtener por tipo
+    @GetMapping("/tipo/{tipoVehiculo}")
+    @Operation(summary = "Obtener por tipo", description = "Devuelve una lista de todos los espacios del tipo indicado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista obtenida con éxito"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<List<EspacioParqueadero>> obtenerPorTipo(
+            @PathVariable("tipoVehiculo") String tipoVehiculoPermitido) {
+        return ResponseEntity.ok(espacioparqueaderoservice.obtenerPorTipo(tipoVehiculoPermitido));
     }
 }
