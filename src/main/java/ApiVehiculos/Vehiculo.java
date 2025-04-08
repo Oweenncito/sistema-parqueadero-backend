@@ -1,4 +1,4 @@
-package com.example.sistema_parqueadero_backend;
+package ApiVehiculos;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 

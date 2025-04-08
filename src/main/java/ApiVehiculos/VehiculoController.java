@@ -1,4 +1,4 @@
-package com.example.sistema_parqueadero_backend;
+package ApiVehiculos;
 
 import java.util.List;
 
@@ -22,7 +22,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Vehículos", description = "Operaciones relacionadas con vehículos")
 @RestController
 @RequestMapping("/api/vehiculos")
-@Tag(name = "Parqueadero", description = "API para la gestión de vehiculos")
 public class VehiculoController {
 
     private final VehiculoService vehiculoService;

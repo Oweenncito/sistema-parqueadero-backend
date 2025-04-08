@@ -1,8 +1,10 @@
-package com.example.sistema_parqueadero_backend;
+package ApiRegistroEntradaSalida;
 
 import java.time.LocalDateTime;
 
 import java.util.UUID;
+
+import ApiVehiculos.Vehiculo;
 
 public class RegistroEntradaSalida {
 	

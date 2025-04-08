@@ -1,4 +1,4 @@
-package com.example.sistema_parqueadero_backend;
+package ApiEspacioParqueadero;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

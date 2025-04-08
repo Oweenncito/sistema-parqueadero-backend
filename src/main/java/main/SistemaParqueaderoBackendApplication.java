@@ -1,9 +1,9 @@
-package com.example.sistema_parqueadero_backend;
+package main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"main", "ApiVehiculos", "ApiEspacioParqueadero"})
 public class SistemaParqueaderoBackendApplication {
 
 	public static void main(String[] args) {

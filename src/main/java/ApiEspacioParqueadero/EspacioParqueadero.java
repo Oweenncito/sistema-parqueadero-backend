@@ -1,4 +1,4 @@
-package com.example.sistema_parqueadero_backend;
+package ApiEspacioParqueadero;
 
 /**
  *

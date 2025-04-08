@@ -1,4 +1,4 @@
-package com.example.sistema_parqueadero_backend;
+package ApiVehiculos;
 
 import java.util.ArrayList;
 import java.util.HashMap;
