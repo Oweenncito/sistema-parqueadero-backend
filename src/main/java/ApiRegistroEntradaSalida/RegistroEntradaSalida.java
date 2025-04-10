@@ -20,7 +20,7 @@ public class RegistroEntradaSalida {
     			
     }
     
-   public RegistroEntradaSalida ( Vehiculo vehiculo, LocalDateTime horaEntrada, LocalDateTime horaSalida, double totalAPagar ) {
+   public RegistroEntradaSalida ( LocalDateTime horaEntrada, LocalDateTime horaSalida, double totalAPagar,Vehiculo vehiculo ) {
     	
 	   this.id = UUID.randomUUID().toString();
 	   this. vehiculo = vehiculo;
