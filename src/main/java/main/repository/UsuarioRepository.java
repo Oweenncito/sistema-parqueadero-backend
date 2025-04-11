@@ -1,8 +1,9 @@
-package Usuario;
+package main.repository;
 
 
 
 
+import main.model.Usuario;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;

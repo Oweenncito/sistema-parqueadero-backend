@@ -1,8 +1,10 @@
-package ApiVehiculos;
+package main.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import main.model.Vehiculo;
+import main.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

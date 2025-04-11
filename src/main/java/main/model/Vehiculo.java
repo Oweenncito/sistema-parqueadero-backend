@@ -1,6 +1,4 @@
-package ApiVehiculos;
-
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+package main.model;
 
 
 import java.util.UUID;

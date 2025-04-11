@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import java.util.UUID;
 
-import ApiVehiculos.Vehiculo;
+import main.model.Vehiculo;
 
 public class RegistroEntradaSalida {
 	
