@@ -56,7 +56,7 @@ public class VehiculoController {
     }
 
     // ✅ Buscar por placa
-    @GetMapping("/placa/{placa}")
+    @GetMapping("/{placa}")
     @Operation(summary = "Obtener vehiculo por placa", description = "Devuelve un vehiculo específico basado en su placa.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "vehiculo encontrado"),
@@ -68,7 +68,7 @@ public class VehiculoController {
     }
 
     // ✅ Buscar por ID
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Obtener vehiculo por ID", description = "Devuelve un vehiculo específico basado en su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Vehiculo encontrado"),
@@ -80,7 +80,7 @@ public class VehiculoController {
     }
 
     // ✅ Eliminar por placa
-    @DeleteMapping("/placa/{placa}")
+    @DeleteMapping("/{placa}")
     @Operation(summary = "Eliminar un vehiculo", description = "Elimina un vehiculo basado en su placa.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Vehiculo eliminado con éxito"),
