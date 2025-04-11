@@ -28,13 +28,13 @@ public class UsuarioController {
 
     @Operation(summary = "Obtener todos los usuarios")
     @GetMapping
-    public ResponseEntity<List<Usuario>> obtenerTodos() {
+    public ResponseEntity<List<Usuario>> findAll() {
         return ResponseEntity.ok(usuarioService.findAll());
     }
 
     @Operation(summary = "Obtener un usuario por ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> obtenerPorId(@PathVariable String id) {
+    public ResponseEntity<Usuario> findByID(@PathVariable String id) {
         return usuarioService.findByID(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -42,13 +42,13 @@ public class UsuarioController {
 
     @Operation(summary = "Crear un nuevo usuario")
     @PostMapping
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> saveUser(@RequestBody Usuario usuario) {
         return ResponseEntity.ok(usuarioService.saveUser(usuario));
     }
 
     @Operation(summary = "Actualizar un usuario existente")
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable String id, @RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> updateUser(@PathVariable String id, @RequestBody Usuario usuario) {
         return usuarioService.updateUser(id, usuario)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -56,7 +56,7 @@ public class UsuarioController {
 
     @Operation(summary = "Eliminar un usuario")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable String id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         if (usuarioService.deleteUser(id)) {
             return ResponseEntity.noContent().build();
         } else {
@@ -66,7 +66,7 @@ public class UsuarioController {
 
     @Operation(summary = "Buscar usuarios por nombre y correo")
     @GetMapping("/buscar")
-    public ResponseEntity<List<Usuario>> buscarUsuarios(
+    public ResponseEntity<List<Usuario>> searchUsers(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String correo
     ) {
