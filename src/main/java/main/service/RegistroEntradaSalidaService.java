@@ -1,5 +1,6 @@
-package ApiRegistroEntradaSalida;
+package main.service;
 
+import main.model.RegistroEntradaSalida;
 import main.model.Vehiculo;
 
 /**
@@ -9,6 +10,7 @@ import main.model.Vehiculo;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import main.repository.RegistroEntradaSalidaRepository;
 import org.springframework.stereotype.Service;
 
 @Service

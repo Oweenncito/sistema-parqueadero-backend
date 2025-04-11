@@ -1,4 +1,4 @@
-package ApiRegistroEntradaSalida;
+package main.repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import main.model.RegistroEntradaSalida;
 import org.springframework.stereotype.Repository;
 
 @Repository

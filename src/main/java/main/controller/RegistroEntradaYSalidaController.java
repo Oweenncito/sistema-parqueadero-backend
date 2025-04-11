@@ -2,12 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ApiRegistroEntradaSalida;
+package main.controller;
 
+import main.service.RegistroEntradaSalidaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import main.model.RegistroEntradaSalida;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

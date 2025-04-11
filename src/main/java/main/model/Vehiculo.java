@@ -1,6 +1,7 @@
 package main.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 public class Vehiculo {
 
@@ -9,28 +10,27 @@ public class Vehiculo {
 	private String tipo;
 	private String marca;
 	private String color;
-	private LocalDate HoraEntrada;
+	private LocalDateTime HoraEntrada;
 	
 	public Vehiculo() {
-	
 		this.id = UUID.randomUUID().toString();
+		this.HoraEntrada = LocalDateTime.now();
 	}
 	
-	public Vehiculo ( String placa, String tipo, String marca, String color) {
-		
+	public Vehiculo (String placa, String tipo, String marca, String color) {
 		this.id = UUID.randomUUID().toString();
 		this.placa = placa;
 		this.tipo = tipo;
 		this.marca = marca;
 		this.color = color;
-		this.HoraEntrada=LocalDate.now();
-		}
+		this.HoraEntrada = LocalDateTime.now();
+	}
 
-	public LocalDate getHoraEntrada() {
+	public LocalDateTime getHoraEntrada() {
 		return HoraEntrada;
 	}
 
-	public void setHoraEntrada(LocalDate horaEntrada) {
+	public void setHoraEntrada(LocalDateTime horaEntrada) {
 		HoraEntrada = horaEntrada;
 	}
 

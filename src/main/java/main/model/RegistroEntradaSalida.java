@@ -1,10 +1,8 @@
-package ApiRegistroEntradaSalida;
+package main.model;
 
 import java.time.LocalDateTime;
 
 import java.util.UUID;
-
-import main.model.Vehiculo;
 
 public class RegistroEntradaSalida {
 	
