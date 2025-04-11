@@ -1,8 +1,10 @@
-package ApiVehiculos;
+package main.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import main.model.Vehiculo;
+import main.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +36,6 @@ public class VehiculoService {
 
     // Registrar vehículo
     public Vehiculo registrarVehiculo(Vehiculo vehiculo) {
-        if (vehiculoRepository.existsByPlaca(vehiculo.getPlaca())) {
-            throw new IllegalArgumentException("Ya existe un vehículo con la placa: " + vehiculo.getPlaca());
-        }
         return vehiculoRepository.save(vehiculo);
     }
 

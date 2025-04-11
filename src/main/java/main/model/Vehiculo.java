@@ -1,8 +1,7 @@
-package ApiVehiculos;
+package main.model;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 public class Vehiculo {
 
@@ -11,19 +10,28 @@ public class Vehiculo {
 	private String tipo;
 	private String marca;
 	private String color;
+	private LocalDateTime HoraEntrada;
 	
 	public Vehiculo() {
-	
 		this.id = UUID.randomUUID().toString();
+		this.HoraEntrada = LocalDateTime.now();
 	}
 	
-	public Vehiculo ( String placa, String tipo, String marca, String color) {
-		
+	public Vehiculo (String placa, String tipo, String marca, String color) {
 		this.id = UUID.randomUUID().toString();
 		this.placa = placa;
 		this.tipo = tipo;
 		this.marca = marca;
 		this.color = color;
+		this.HoraEntrada = LocalDateTime.now();
+	}
+
+	public LocalDateTime getHoraEntrada() {
+		return HoraEntrada;
+	}
+
+	public void setHoraEntrada(LocalDateTime horaEntrada) {
+		HoraEntrada = horaEntrada;
 	}
 
 	public String getId() {

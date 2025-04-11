@@ -1,5 +1,7 @@
-package Usuario;
+package main.service;
 
+import main.model.Usuario;
+import main.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 
