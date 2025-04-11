@@ -1,9 +1,7 @@
-package main.controller;
+package ApiVehiculos;
 
 import java.util.List;
 
-import main.service.VehiculoService;
-import main.model.Vehiculo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +55,18 @@ public class VehiculoController {
         return ResponseEntity.ok(vehiculoService.obtenerTodosLosVehiculos());
     }
 
+    // ✅ Buscar por placa
+    @GetMapping("/{placa}")
+    @Operation(summary = "Obtener vehiculo por placa", description = "Devuelve un vehiculo específico basado en su placa.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "vehiculo encontrado"),
+            @ApiResponse(responseCode = "404", description = "vehiculo no encontrado")
+    })
+    public ResponseEntity<Vehiculo> buscarPorPlaca(@PathVariable@Parameter(description = " placa del vehiculo") String placa) {
+        Vehiculo vehiculo = vehiculoService.buscarPorPlaca(placa);
+        return ResponseEntity.ok(vehiculo);
+    }
+
     // ✅ Buscar por ID
     @GetMapping("/{id}")
     @Operation(summary = "Obtener vehiculo por ID", description = "Devuelve un vehiculo específico basado en su ID.")
@@ -69,8 +79,20 @@ public class VehiculoController {
         return ResponseEntity.ok(vehiculo);
     }
 
+    // ✅ Eliminar por placa
+    @DeleteMapping("/{placa}")
+    @Operation(summary = "Eliminar un vehiculo", description = "Elimina un vehiculo basado en su placa.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Vehiculo eliminado con éxito"),
+            @ApiResponse(responseCode = "404", description = "Vehiculo  no encontrado")
+    })
+    public ResponseEntity<Void> eliminarPorPlaca(@PathVariable @Parameter(description = "Placa del vehiculo") String placa) {
+        vehiculoService.eliminarPorPlaca(placa);
+        return ResponseEntity.noContent().build();
+    }
+
     // ✅ Eliminar por ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     @Operation(summary = "Eliminar un vehiculo", description = "Elimina un vehiculo basado en su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Vehiculo eliminado con éxito"),
@@ -79,5 +101,16 @@ public class VehiculoController {
     public ResponseEntity<Void> eliminarPorId(@PathVariable @Parameter(description = "ID del vehiculo") String id) {
         vehiculoService.eliminarPorId(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // ✅ Contar vehículos
+    @GetMapping("/total")
+    @Operation(summary = "Contar vehículos", description = "Devuelve el número total de vehículos registrados en el sistema.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Conteo obtenido correctamente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<Integer> contarVehiculos() {
+        return ResponseEntity.ok(vehiculoService.contarVehiculos());
     }
 }
