@@ -1,5 +1,6 @@
-package ApiEspacioParqueadero;
+package main.controller;
 
+import main.model.EspacioParqueadero;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -7,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import main.model.Vehiculo;
+import main.service.EspacioParqueaderoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,12 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Parqueadero", description = "API para la gestión de parqueadero")
 @RestController
 @RequestMapping("/api/parqueadero")
-public class EspacioParqueaderoControlador {
+public class EspacioParqueaderoController {
 
     private final EspacioParqueaderoService espacioparqueaderoservice;
 
     @Autowired
-    public EspacioParqueaderoControlador(EspacioParqueaderoService espacioparqueaderoservice){
+    public EspacioParqueaderoController(EspacioParqueaderoService espacioparqueaderoservice){
         this.espacioparqueaderoservice = espacioparqueaderoservice;
     }
 
@@ -67,8 +71,11 @@ public class EspacioParqueaderoControlador {
     })
     public ResponseEntity<EspacioParqueadero> buscarPorNumero(
             @PathVariable @Parameter(description = "Número del espacio") int numero) {
-        EspacioParqueadero espacioparqueadero = espacioparqueaderoservice.buscarPorNumero(numero);
-        return ResponseEntity.ok(espacioparqueadero);
+        EspacioParqueadero espacio = espacioparqueaderoservice.buscarPorNumero(numero);
+        if (espacio == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(espacio);
     }
 
     // ✅ Eliminar por número
@@ -80,11 +87,14 @@ public class EspacioParqueaderoControlador {
     })
     public ResponseEntity<Void> eliminarPorNumero(
             @PathVariable @Parameter(description = "Número del espacio") int numero) {
-        espacioparqueaderoservice.eliminarPorNumero(numero);
+        boolean eliminado = espacioparqueaderoservice.eliminarPorNumero(numero);
+        if (!eliminado) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
-    // ✅ Obtener todos los espacios disponibles (corregido con nueva ruta)
+    // ✅ Obtener todos los espacios disponibles
     @GetMapping("/disponibles")
     @Operation(summary = "Obtener espacios disponibles", description = "Devuelve una lista de todos los espacios disponibles.")
     @ApiResponses(value = {
@@ -106,4 +116,32 @@ public class EspacioParqueaderoControlador {
             @PathVariable("tipoVehiculo") String tipoVehiculoPermitido) {
         return ResponseEntity.ok(espacioparqueaderoservice.obtenerPorTipo(tipoVehiculoPermitido));
     }
+
+    // ➕ Asignar un vehículo a un espacio (marcar como ocupado)
+    @PostMapping("/{numero}/asignar")
+    @Operation(summary = "Asignar vehículo a un espacio", description = "Asigna un vehículo a un espacio de parqueadero.")
+    public ResponseEntity<EspacioParqueadero> asignarVehiculo(
+            @PathVariable int numero,
+            @RequestBody @Parameter(description = "Datos del vehículo") Vehiculo vehiculo) {
+
+        EspacioParqueadero espacioActualizado = espacioparqueaderoservice.asignarVehiculo(numero, vehiculo);
+        if (espacioActualizado == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(espacioActualizado);
+    }
+
+    // ➕ Liberar un espacio (remover vehículo)
+    @PutMapping("/{numero}/liberar")
+    @Operation(summary = "Liberar un espacio", description = "Libera un espacio de parqueadero.")
+    public ResponseEntity<EspacioParqueadero> liberarEspacio(
+            @PathVariable int numero) {
+
+        EspacioParqueadero espacioLiberado = espacioparqueaderoservice.liberarEspacio(numero);
+        if (espacioLiberado == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(espacioLiberado);
+    }
+
 }

@@ -14,10 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import org.springframework.http.HttpStatus;
 
 @Tag(name = "Usuarios", description = "Operaciones relacionadas con usuarios")
 @RestController
-@RequestMapping("/api/usuariosqs")
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -69,8 +71,11 @@ public class UsuarioController {
     @GetMapping("/buscar")
     public ResponseEntity<List<Usuario>> searchUsers(
             @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String correo
+            @RequestParam(required = false) String contraseña
     ) {
-        return ResponseEntity.ok(usuarioService.searchUsers(nombre, correo));
+        return ResponseEntity.ok(usuarioService.searchUsers(nombre, contraseña));
     }
+    
+    
+ 
 }

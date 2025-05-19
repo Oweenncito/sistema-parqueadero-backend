@@ -10,17 +10,25 @@ import org.springframework.stereotype.Service;
 
 
 
+//clase service de vehiculo
 @Service
 public class VehiculoService {
 
+    //llamamos al repository de vehiculo 
     private final VehiculoRepository vehiculoRepository;
 
+    
+    /*lo pasamos por parametro en el constructor y lo inicializamos para poder interactuar entre el repositorio 
+      y el servicio
+    */
     @Autowired
     public VehiculoService(VehiculoRepository vehiculoRepository) {
         this.vehiculoRepository = vehiculoRepository;
         initSampleData();
         }
     
+    
+    //este metodo genera unos vehiculos predeterminados ya en la base de datos 
     public void initSampleData() {
         Vehiculo vehiculo1 = new Vehiculo("TBI67G", "MOTO", "AKT", "NEGRO MATE");
         Vehiculo vehiculo2 = new Vehiculo("ALV17E", "MOTO", "UNI-K", "NEGRO");
@@ -34,7 +42,7 @@ public class VehiculoService {
 
     }
 
-    // Registrar vehículo
+    // este metodo Registra un vehículo y lo guarda en el repository 
     public Vehiculo registrarVehiculo(Vehiculo vehiculo) {
         return vehiculoRepository.save(vehiculo);
     }

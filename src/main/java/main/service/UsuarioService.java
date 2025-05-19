@@ -44,10 +44,12 @@ public class UsuarioService {
         return usuarioRepository.deleteUser(id);
     }
 
-    // Buscar usuarios por nombre y correo
-    public List<Usuario> searchUsers(String nombre, String correo) {
-        return usuarioRepository.searchUsers(nombre, correo);
+    // Buscar usuarios por nombre y contraseña
+    public List<Usuario> searchUsers(String nombre, String contraseña) {
+        return usuarioRepository.searchUsers(nombre, contraseña);
     }
+    
+
 
     // Inicializar datos de ejemplo
     private void initSampleData() {

@@ -28,6 +28,9 @@ public class UsuarioRepository {
     public Optional<Usuario> findByID(String id) {
         return Optional.ofNullable(baseDeDatos.get(id));
     }
+    
+    
+    
 
     // Actualizar usuario
     public Optional<Usuario> updateUser(String id, Usuario usuarioActualizado) {
@@ -45,12 +48,12 @@ public class UsuarioRepository {
     }
 
     
-    public List<Usuario> searchUsers(String nombre, String correo) {
+    public List<Usuario> searchUsers(String nombre, String contraseña) {
         List<Usuario> resultado = new ArrayList<>();
         for (Usuario usuario : baseDeDatos.values()) {
             boolean coincideNombre = nombre == null || usuario.getNombre().toLowerCase().contains(nombre.toLowerCase());
-            boolean coincideCorreo = correo == null || usuario.getCorreo().toLowerCase().contains(correo.toLowerCase());
-            if (coincideNombre && coincideCorreo) {
+            boolean coincideContraseña = contraseña == null || usuario.getContraseña().toLowerCase().contains(contraseña.toLowerCase());
+            if (coincideNombre && coincideContraseña) {
                 resultado.add(usuario);
             }
         }
