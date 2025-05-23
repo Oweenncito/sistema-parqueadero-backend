@@ -8,17 +8,18 @@ public class EspacioParqueadero {
 
     //parametros de espacioParqueadero
     private int numero;
+
     private boolean disponible;
-    private String tipoVehiculoPermitido;
+
     private Vehiculo vehiculo; // eso hara que un vehiculo se guarde en un espacio del parqueadero
 
     /* Constructor principal el vehiculo no se pasa por parametro al constructor si no que se inicializa dentro de el
     asumiendo que el espacio se inicia sin ningun vehiculo, para despues ser ocupado por uno*/
-    public EspacioParqueadero(int numero, boolean disponible, String tipoVehiculoPermitido) {
+    public EspacioParqueadero(int numero, boolean disponible) {
         this.numero = numero;
         this.disponible = disponible;
-        this.tipoVehiculoPermitido = tipoVehiculoPermitido;
         this.vehiculo = null;
+
     }
 
     // Getters y Setters
@@ -36,14 +37,6 @@ public class EspacioParqueadero {
 
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
-    }
-
-    public String getTipoVehiculoPermitido() {
-        return tipoVehiculoPermitido;
-    }
-
-    public void setTipoVehiculoPermitido(String tipoVehiculoPermitido) {
-        this.tipoVehiculoPermitido = tipoVehiculoPermitido;
     }
 
     public Vehiculo getVehiculo() {

@@ -44,8 +44,7 @@ public class VehiculoRepository {
     
     //este metodo verifica si existe ya un vehiculo con la placa que entro por parametro  
     public boolean existsByPlaca(String placa) {
-        return baseDeDatos.values().stream()
-            .anyMatch(v -> v.getPlaca().equalsIgnoreCase(placa));
+        return baseDeDatos.values().stream().anyMatch(v -> v.getPlaca() != null && v.getPlaca().equalsIgnoreCase(placa));
     }
     
     //este metodo elimina un vehiculo por su placa 

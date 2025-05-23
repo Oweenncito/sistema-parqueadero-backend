@@ -22,7 +22,9 @@ public class EspacioParqueaderoRepository {
     
     // Guardar o actualizar un espacio (ahora actualiza si ya existe)
     public EspacioParqueadero save(EspacioParqueadero espacio){
-        baseDeDatos.put(espacio.getNumero(), espacio);
+        System.out.println("el numero que entro es: " + espacio.getNumero());
+        System.out.println("el espacio que entro es:" + espacio.isDisponible());
+         baseDeDatos.put(espacio.getNumero(), espacio);
         return espacio;
     }
     
@@ -53,15 +55,7 @@ public class EspacioParqueaderoRepository {
     }
     
     // Buscar espacios por tipo de vehículo permitido
-    public List<EspacioParqueadero> findByTipoVehiculo(String tipoVehiculo) {
-        List<EspacioParqueadero> lista = new ArrayList<>();
-        for (EspacioParqueadero espacio : baseDeDatos.values()) {
-            if (espacio.getTipoVehiculoPermitido().equalsIgnoreCase(tipoVehiculo)) {
-                lista.add(espacio);
-            }
-        }
-        return lista;
-    }
+ 
     
     // Asignar vehículo a un espacio (marcar ocupado)
     public EspacioParqueadero asignarVehiculo(int numeroEspacio, Vehiculo vehiculo) {
@@ -76,7 +70,7 @@ public class EspacioParqueaderoRepository {
     }
     
     // Liberar espacio (quitar vehículo y marcar disponible)
-    public EspacioParqueadero liberarEspacio(int numeroEspacio) {
+   public EspacioParqueadero liberarEspacio(int numeroEspacio) {
         EspacioParqueadero espacio = baseDeDatos.get(numeroEspacio);
         if (espacio != null && !espacio.isDisponible()) {
             espacio.setVehiculo(null);

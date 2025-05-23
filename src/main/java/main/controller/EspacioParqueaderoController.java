@@ -28,14 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Tag(name = "Parqueadero", description = "API para la gestión de parqueadero")
 @RestController
-@RequestMapping("/api/parqueadero")
+@RequestMapping("/api/espacio")
 public class EspacioParqueaderoController {
 
-    private final EspacioParqueaderoService espacioparqueaderoservice;
+  
+    private final EspacioParqueaderoService espacioParqueaderoService;
 
-    @Autowired
-    public EspacioParqueaderoController(EspacioParqueaderoService espacioparqueaderoservice){
-        this.espacioparqueaderoservice = espacioparqueaderoservice;
+ 
+    public EspacioParqueaderoController(EspacioParqueaderoService espacioParqueaderoService){
+        this.espacioParqueaderoService = espacioParqueaderoService;
     }
 
     // ✅ Ocupar nuevo espacio
@@ -45,10 +46,11 @@ public class EspacioParqueaderoController {
             @ApiResponse(responseCode = "201", description = "Parqueadero ocupado"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
-    public ResponseEntity<EspacioParqueadero> guardarEspacio(
-            @RequestBody @Parameter(description = "Datos del espacio") EspacioParqueadero espacio) {
-        EspacioParqueadero nuevoParqueadero = espacioparqueaderoservice.guardarEspacio(espacio);
-        return new ResponseEntity<>(nuevoParqueadero, HttpStatus.CREATED);
+  public ResponseEntity<EspacioParqueadero> guardarEspacio(@RequestBody EspacioParqueadero espacio) {
+         System.out.println("Número recibido: " + espacio.getNumero());
+         System.out.println("espacio disponible recibido: " + espacio.isDisponible());
+    EspacioParqueadero guardado = espacioParqueaderoService.guardarEspacio(espacio);
+    return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
     }
 
     // ✅ Obtener todos los parqueaderos
@@ -59,7 +61,7 @@ public class EspacioParqueaderoController {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     public ResponseEntity<List<EspacioParqueadero>> obtenerTodos() {
-        return ResponseEntity.ok(espacioparqueaderoservice.obtenerTodos());
+        return ResponseEntity.ok(espacioParqueaderoService.obtenerTodos());
     }
 
     // ✅ Buscar por número
@@ -71,7 +73,7 @@ public class EspacioParqueaderoController {
     })
     public ResponseEntity<EspacioParqueadero> buscarPorNumero(
             @PathVariable @Parameter(description = "Número del espacio") int numero) {
-        EspacioParqueadero espacio = espacioparqueaderoservice.buscarPorNumero(numero);
+        EspacioParqueadero espacio = espacioParqueaderoService.buscarPorNumero(numero);
         if (espacio == null) {
             return ResponseEntity.notFound().build();
         }
@@ -87,7 +89,7 @@ public class EspacioParqueaderoController {
     })
     public ResponseEntity<Void> eliminarPorNumero(
             @PathVariable @Parameter(description = "Número del espacio") int numero) {
-        boolean eliminado = espacioparqueaderoservice.eliminarPorNumero(numero);
+        boolean eliminado = espacioParqueaderoService.eliminarPorNumero(numero);
         if (!eliminado) {
             return ResponseEntity.notFound().build();
         }
@@ -102,20 +104,10 @@ public class EspacioParqueaderoController {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     public ResponseEntity<List<EspacioParqueadero>> obtenerDisponibles() {
-        return ResponseEntity.ok(espacioparqueaderoservice.obtenerDisponibles());
+        return ResponseEntity.ok(espacioParqueaderoService.obtenerDisponibles());
     }
 
-    // ✅ Obtener por tipo
-    @GetMapping("/tipo/{tipoVehiculo}")
-    @Operation(summary = "Obtener por tipo", description = "Devuelve una lista de todos los espacios del tipo indicado.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista obtenida con éxito"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
-    public ResponseEntity<List<EspacioParqueadero>> obtenerPorTipo(
-            @PathVariable("tipoVehiculo") String tipoVehiculoPermitido) {
-        return ResponseEntity.ok(espacioparqueaderoservice.obtenerPorTipo(tipoVehiculoPermitido));
-    }
+
 
     // ➕ Asignar un vehículo a un espacio (marcar como ocupado)
     @PostMapping("/{numero}/asignar")
@@ -124,7 +116,7 @@ public class EspacioParqueaderoController {
             @PathVariable int numero,
             @RequestBody @Parameter(description = "Datos del vehículo") Vehiculo vehiculo) {
 
-        EspacioParqueadero espacioActualizado = espacioparqueaderoservice.asignarVehiculo(numero, vehiculo);
+        EspacioParqueadero espacioActualizado = espacioParqueaderoService.asignarVehiculo(numero, vehiculo);
         if (espacioActualizado == null) {
             return ResponseEntity.notFound().build();
         }
@@ -137,11 +129,16 @@ public class EspacioParqueaderoController {
     public ResponseEntity<EspacioParqueadero> liberarEspacio(
             @PathVariable int numero) {
 
-        EspacioParqueadero espacioLiberado = espacioparqueaderoservice.liberarEspacio(numero);
+        EspacioParqueadero espacioLiberado = espacioParqueaderoService.liberarEspacio(numero);
         if (espacioLiberado == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(espacioLiberado);
+    }
+    
+    @PostMapping("/ingresar/{idEspacio}")
+    public EspacioParqueadero ingresarVehiculo(@RequestBody Vehiculo vehiculo, @PathVariable int idEspacio) {
+        return espacioParqueaderoService.ingresarVehiculoEnEspacio(idEspacio, vehiculo);
     }
 
 }
