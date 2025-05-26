@@ -24,23 +24,12 @@ public class VehiculoService {
     @Autowired
     public VehiculoService(VehiculoRepository vehiculoRepository) {
         this.vehiculoRepository = vehiculoRepository;
-        initSampleData();
+  
         }
     
     
     //este metodo genera unos vehiculos predeterminados ya en la base de datos 
-    public void initSampleData() {
-        Vehiculo vehiculo1 = new Vehiculo("TBI67G", "MOTO", "AKT", "NEGRO MATE");
-        Vehiculo vehiculo2 = new Vehiculo("ALV17E", "MOTO", "UNI-K", "NEGRO");
-        Vehiculo vehiculo3 = new Vehiculo("DGH45E",  "CARRO",  "CHEVROLET", "BLANCO");
-        Vehiculo vehiculo4 = new Vehiculo("FTJ67G", "CARRO", "TWINGO", "GRIS");
-       
-        vehiculoRepository.save(vehiculo1);
-        vehiculoRepository.save(vehiculo2);
-        vehiculoRepository.save(vehiculo3);
-        vehiculoRepository.save(vehiculo4);
-
-    }
+   
 
     // este metodo Registra un vehículo y lo guarda en el repository 
     public Vehiculo registrarVehiculo(Vehiculo vehiculo) {

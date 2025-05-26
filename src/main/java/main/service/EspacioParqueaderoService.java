@@ -18,19 +18,18 @@ public class EspacioParqueaderoService {
     
  
     private final EspacioParqueaderoRepository espacioParqueaderoRepository;
+    
+   @Autowired
     private VehiculoRepository vehiculoRepository;
     
    @Autowired
     public EspacioParqueaderoService(EspacioParqueaderoRepository espacioParqueaderoRepository){
         this.espacioParqueaderoRepository = espacioParqueaderoRepository;
-        initSampleData();
-       
+     
     }
-
     
     public EspacioParqueadero guardarEspacio(EspacioParqueadero espacio) {
-        System.out.println("el numero que entro es: " + espacio.getNumero());
-        System.out.println("el espacio que entro es:" + espacio.isDisponible());
+    
         return espacioParqueaderoRepository.save(espacio);
     }
       
@@ -60,16 +59,7 @@ public class EspacioParqueaderoService {
         return espacioParqueaderoRepository.liberarEspacio(numeroEspacio);
     }
           
-    public void initSampleData(){
-        
-        EspacioParqueadero espacioUno = new EspacioParqueadero(1, false);
-        EspacioParqueadero espacioDos = new EspacioParqueadero(2, false);
-        
-        espacioParqueaderoRepository.save(espacioUno);
-        espacioParqueaderoRepository.save(espacioDos);
-        
-    }
-    
+   
     
     public EspacioParqueadero ingresarVehiculoEnEspacio(int idEspacio, Vehiculo vehiculo) {
     // Validar que el vehículo no sea null
@@ -78,9 +68,11 @@ public class EspacioParqueaderoService {
     }
 
    EspacioParqueadero espacio = espacioParqueaderoRepository.findById(idEspacio);
+   
    if (espacio == null) {
     throw new RuntimeException("El espacio no existe");
    }
+   
     if (espacio.getVehiculo() != null) {
         throw new RuntimeException("El espacio ya está ocupado");
     }
@@ -89,8 +81,10 @@ public class EspacioParqueaderoService {
         throw new RuntimeException("Ya hay un vehículo con esa placa");
     }
 
+    espacio.setDisponible(false);
     vehiculoRepository.save(vehiculo);
     espacio.setVehiculo(vehiculo);
+    espacio.getVehiculo().setHoraEntrada(vehiculo.getHoraEntrada());
     espacioParqueaderoRepository.save(espacio); // No olvidar guardar el espacio actualizado
     
     return espacio;
