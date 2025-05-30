@@ -1,80 +1,113 @@
 package main.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+//clase vehiculo
+@Entity
+@Table(name = "Vehiculos")
 public class Vehiculo {
 
-	private String id;
-	private String placa;
-	private String tipo;
-	private String marca;
-	private String color;
-	private LocalDateTime HoraEntrada;
-	
-	public Vehiculo() {
-		this.id = UUID.randomUUID().toString();
-		this.HoraEntrada = LocalDateTime.now();
-	}
-	
-	public Vehiculo (String placa, String tipo, String marca, String color) {
-		this.id = UUID.randomUUID().toString();
-		this.placa = placa;
-		this.tipo = tipo;
-		this.marca = marca;
-		this.color = color;
-		this.HoraEntrada = LocalDateTime.now();
-	}
+    //sus parametros 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	public LocalDateTime getHoraEntrada() {
-		return HoraEntrada;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    private Usuario usuario;
+    @Column(nullable = false)
+    private String placa;
+    @Column(nullable = false)
+    private String tipo;
+    @Column(nullable = false)
+    private String marca;
+    @Column(nullable = false)
+    private String color;
+    @Column(nullable = false)
+    private LocalDateTime HoraEntrada;
 
-	public void setHoraEntrada(LocalDateTime horaEntrada) {
-		HoraEntrada = horaEntrada;
-	}
+    public Vehiculo() {
 
-	public String getId() {
-		return id;
-	}
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    //constructor sin parametros donde solo se inicializan el id y la hora de entrada 
 
-	public String getPlaca() {
-		return placa;
-	}
+    /*constructor con parametros aqui no se pasan por parametro el id y la hora de entrada, solo se inicializan 
+        dentro del constructor
+     */
+    public Vehiculo(String placa, String tipo, String marca, String color) {
+        this.placa = placa;
+        this.tipo = tipo;
+        this.marca = marca;
+        this.color = color;
+        this.HoraEntrada = LocalDateTime.now();
+    }
 
-	public void setPlaca(String placa) {
-		this.placa = placa;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getTipo() {
-		return tipo;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
-	public String getMarca() {
-		return marca;
-	}
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
-	public void setMarca(String marca) {
-		this.marca = marca;
-	}
+    public String getPlaca() {
+        return placa;
+    }
 
-	public String getColor() {
-		return color;
-	}
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
 
-	public void setColor(String color) {
-		this.color = color;
-	}
-	
-	
-	
-	
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public LocalDateTime getHoraEntrada() {
+        return HoraEntrada;
+    }
+
+    public void setHoraEntrada(LocalDateTime horaEntrada) {
+        HoraEntrada = horaEntrada;
+    }
 }
+

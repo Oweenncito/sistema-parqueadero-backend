@@ -1,66 +1,19 @@
 package main.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import main.model.Vehiculo;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 
+// clase repository de vehiculos 
 @Repository
-public class VehiculoRepository {
+public interface VehiculoRepository extends JpaRepository <Vehiculo, Integer> {
 
-    private final Map<String, Vehiculo> baseDeDatos = new HashMap<>();
-    
-    public Vehiculo save(Vehiculo vehiculo) {
-        baseDeDatos.put(vehiculo.getId(), vehiculo);
-        return vehiculo;
-    }
-    
-    public Vehiculo findById(String id) {
-        return baseDeDatos.get(id);
-    }
-
-    public List<Vehiculo> findAll() {
-        return new ArrayList<>(baseDeDatos.values());
-    }
-
-    public boolean deleteById(String id) {
-        return baseDeDatos.remove(id) != null;
-    }
-
-    public boolean existsByPlaca(String placa) {
-        return baseDeDatos.values().stream()
-            .anyMatch(v -> v.getPlaca().equalsIgnoreCase(placa));
-    }
-    public boolean eliminarPorPlaca(String placa) {
-        String idAEliminar = null;
-
-        for (Vehiculo vehiculo : baseDeDatos.values()) {
-            if (vehiculo.getPlaca().equalsIgnoreCase(placa)) {
-                idAEliminar = vehiculo.getId();
-                break;
-            }
-        }
-
-        if (idAEliminar != null) {
-            baseDeDatos.remove(idAEliminar);
-            return true; 
-        }
-
-        return false; 
-}
-    public Vehiculo findByPlaca(String placa) {
-        return baseDeDatos.values().stream()
-            .filter(v -> v.getPlaca().equalsIgnoreCase(placa))
-            .findFirst()
-            .orElse(null);
-    }
-    public int count() {
-        return baseDeDatos.size();
-    }
+ Vehiculo findByPlaca(String placa);
+ void deleteByPlaca(String placa);
+ boolean existsByPlaca(String placa);
+ List<Vehiculo> findAllByUsuario_Id(Integer usuarioId);
     
 }
