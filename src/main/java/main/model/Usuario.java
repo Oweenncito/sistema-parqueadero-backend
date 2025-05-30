@@ -1,51 +1,43 @@
 package main.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.UUID;
 
+
+@Entity
+@Table(name = "Usuarios")
 public class Usuario {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(nullable = false)
     private String correo;
+
+    @Column(nullable = false)
     private String nombre;
-    private String id;
+
+    @Column(nullable = false)
     private String contraseña;
 
     public Usuario() {
-
-        this.id = UUID.randomUUID().toString();
 
     }
 
     public Usuario(String correo, String nombre, String contraseña) {
 
-        this.id = UUID.randomUUID().toString();
+
         this.correo = correo;
         this.nombre = nombre;
         this.contraseña = contraseña;
 
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getContraseña() {
@@ -56,4 +48,28 @@ public class Usuario {
         this.contraseña = contraseña;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }
+

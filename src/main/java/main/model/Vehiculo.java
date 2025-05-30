@@ -1,27 +1,52 @@
 package main.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 //clase vehiculo
+@Entity
+@Table(name = "Vehiculos")
 public class Vehiculo {
 
     //sus parametros 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    private Usuario usuario;
+    @Column(nullable = false)
     private String placa;
+    @Column(nullable = false)
     private String tipo;
+    @Column(nullable = false)
     private String marca;
+    @Column(nullable = false)
     private String color;
+    @Column(nullable = false)
     private LocalDateTime HoraEntrada;
 
+    public Vehiculo() {
+
+    }
+
     //constructor sin parametros donde solo se inicializan el id y la hora de entrada 
-  
+
     /*constructor con parametros aqui no se pasan por parametro el id y la hora de entrada, solo se inicializan 
         dentro del constructor
      */
     public Vehiculo(String placa, String tipo, String marca, String color) {
-        this.id = UUID.randomUUID().toString();
         this.placa = placa;
         this.tipo = tipo;
         this.marca = marca;
@@ -29,21 +54,20 @@ public class Vehiculo {
         this.HoraEntrada = LocalDateTime.now();
     }
 
-    //getters y setters 
-    public LocalDateTime getHoraEntrada() {
-        return HoraEntrada;
-    }
-
-    public void setHoraEntrada(LocalDateTime horaEntrada) {
-        HoraEntrada = horaEntrada;
-    }
-
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getPlaca() {
@@ -78,4 +102,12 @@ public class Vehiculo {
         this.color = color;
     }
 
+    public LocalDateTime getHoraEntrada() {
+        return HoraEntrada;
+    }
+
+    public void setHoraEntrada(LocalDateTime horaEntrada) {
+        HoraEntrada = horaEntrada;
+    }
 }
+

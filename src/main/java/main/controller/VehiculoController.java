@@ -3,6 +3,7 @@ package main.controller;
 import java.util.List;
 
 import main.model.Vehiculo;
+import main.service.JwtService;
 import main.service.VehiculoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Optional;
 
 
 //clase restController de vehiculo aqui es donde se manejan las peticiones HTTPS 
@@ -24,10 +26,11 @@ public class VehiculoController {
 
     //llamamos a la clase service de vehiculo 
     private final VehiculoService vehiculoService;
-
+    private final JwtService jwtService;
     //constructor para vehiculocontroller
     @Autowired
-    public VehiculoController(VehiculoService vehiculoService) {
+    public VehiculoController(VehiculoService vehiculoService, JwtService jwtService) {
+        this.jwtService = jwtService;
         this.vehiculoService = vehiculoService;
     }
 
@@ -64,8 +67,8 @@ public class VehiculoController {
             @ApiResponse(responseCode = "404", description = "Vehiculo no encontrado")
     })
     //este metodo busca un vehiculo por su id 
-    public ResponseEntity<Vehiculo> buscarPorId(@PathVariable @Parameter(description = "ID del vehiculo") String id) {
-        Vehiculo vehiculo = vehiculoService.buscarPorId(id);
+    public ResponseEntity<Optional<Vehiculo>> buscarPorId(@PathVariable @Parameter(description = "ID del vehiculo") Integer id) {
+        Optional<Vehiculo> vehiculo = vehiculoService.buscarPorId(id);
         return ResponseEntity.ok(vehiculo);
     }
 
@@ -77,7 +80,7 @@ public class VehiculoController {
             @ApiResponse(responseCode = "404", description = "Vehiculo  no encontrado")
     })
     //este metodo elimina un vehiculo por su id
-    public ResponseEntity<Void> eliminarPorId(@PathVariable @Parameter(description = "ID del vehiculo") String id) {
+    public ResponseEntity<Void> eliminarPorId(@PathVariable @Parameter(description = "ID del vehiculo") Integer id) {
         vehiculoService.eliminarPorId(id);
         return ResponseEntity.noContent().build();
     }
@@ -86,7 +89,6 @@ public class VehiculoController {
     //busca un vehiculo por la placa
     @GetMapping("/placa/{placa}")
     public ResponseEntity<Vehiculo> buscarPorPlaca(@PathVariable String placa){
-        
         Vehiculo vehiculo =vehiculoService.buscarPorPlaca(placa);
         return ResponseEntity.ok(vehiculo);
         
@@ -97,5 +99,15 @@ public class VehiculoController {
     public ResponseEntity<Vehiculo> eliminarPorPlaca(@PathVariable String placa){ 
         vehiculoService.eliminarPorPlaca(placa);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<List<Vehiculo>> obtenerVehiculosPorUserId(@RequestHeader ("Authorization") String authHeader,@PathVariable Integer user_id) {
+        String token = jwtService.extractToken(authHeader);
+        if (!jwtService.validateJwtToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<Vehiculo> vehiculos = vehiculoService.findAllByUsuario_Id(user_id);
+        return ResponseEntity.ok(vehiculos);
     }
 }

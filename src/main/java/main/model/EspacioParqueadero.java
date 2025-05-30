@@ -1,34 +1,59 @@
 package main.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
 /**
- *
  * @author judav
  */
+@Entity
+@Table(name = "Espacios")
 public class EspacioParqueadero {
 
-    //parametros de espacioParqueadero
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(nullable = false)
     private int numero;
 
+    @Column(nullable = false)
     private boolean disponible;
 
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "vehiculo_id", referencedColumnName = "id", nullable = true) // nombre columna FK en la tabla
     private Vehiculo vehiculo; // eso hara que un vehiculo se guarde en un espacio del parqueadero
 
-    /* Constructor principal el vehiculo no se pasa por parametro al constructor si no que se inicializa dentro de el
-    asumiendo que el espacio se inicia sin ningun vehiculo, para despues ser ocupado por uno*/
-    public EspacioParqueadero(int numero, boolean disponible) {
-        this.numero = numero;
-        this.disponible = disponible;
-        this.vehiculo = null;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    private Usuario usuario;
+
+
+    public EspacioParqueadero() {
 
     }
 
-    // Getters y Setters
-    public int getNumero() {
-        return numero;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 
     public boolean isDisponible() {
@@ -39,11 +64,20 @@ public class EspacioParqueadero {
         this.disponible = disponible;
     }
 
-    public Vehiculo getVehiculo() {
-        return vehiculo;
+    public int getNumero() {
+        return numero;
     }
 
-    public void setVehiculo(Vehiculo vehiculo) {
-        this.vehiculo = vehiculo;
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
 }

@@ -3,27 +3,24 @@ package main.controller;
 import main.model.EspacioParqueadero;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.web.bind.annotation.RequestBody;
+import main.service.JwtService;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
+import java.util.Optional;
+
 import main.model.Vehiculo;
 import main.service.EspacioParqueaderoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- *
  * @author judav
  */
 @Tag(name = "Parqueadero", description = "API para la gestión de parqueadero")
@@ -31,12 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/espacio")
 public class EspacioParqueaderoController {
 
-  
-    private final EspacioParqueaderoService espacioParqueaderoService;
 
- 
-    public EspacioParqueaderoController(EspacioParqueaderoService espacioParqueaderoService){
+    private final EspacioParqueaderoService espacioParqueaderoService;
+    private final JwtService jwtService;
+
+    @Autowired
+    public EspacioParqueaderoController(EspacioParqueaderoService espacioParqueaderoService, JwtService jwtService) {
         this.espacioParqueaderoService = espacioParqueaderoService;
+        this.jwtService = jwtService;
     }
 
     // ✅ Ocupar nuevo espacio
@@ -46,11 +45,11 @@ public class EspacioParqueaderoController {
             @ApiResponse(responseCode = "201", description = "Parqueadero ocupado"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
-  public ResponseEntity<EspacioParqueadero> guardarEspacio(@RequestBody EspacioParqueadero espacio) {
-         System.out.println("Número recibido: " + espacio.getNumero());
-         System.out.println("espacio disponible recibido: " + espacio.isDisponible());
-    EspacioParqueadero guardado = espacioParqueaderoService.guardarEspacio(espacio);
-    return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
+    public ResponseEntity<EspacioParqueadero> guardarEspacio(@RequestBody EspacioParqueadero espacio) {
+        System.out.println("Número recibido: " + espacio.getNumero());
+        System.out.println("espacio disponible recibido: " + espacio.isDisponible());
+        EspacioParqueadero guardado = espacioParqueaderoService.guardarEspacio(espacio);
+        return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
     }
 
     // ✅ Obtener todos los parqueaderos
@@ -71,9 +70,9 @@ public class EspacioParqueaderoController {
             @ApiResponse(responseCode = "200", description = "Espacio encontrado"),
             @ApiResponse(responseCode = "404", description = "Espacio no encontrado")
     })
-    public ResponseEntity<EspacioParqueadero> buscarPorNumero(
+    public ResponseEntity<Optional<EspacioParqueadero>> buscarPorNumero(
             @PathVariable @Parameter(description = "Número del espacio") int numero) {
-        EspacioParqueadero espacio = espacioParqueaderoService.buscarPorNumero(numero);
+        Optional<EspacioParqueadero> espacio = espacioParqueaderoService.buscarPorNumero(numero);
         if (espacio == null) {
             return ResponseEntity.notFound().build();
         }
@@ -97,48 +96,47 @@ public class EspacioParqueaderoController {
     }
 
     // ✅ Obtener todos los espacios disponibles
-    @GetMapping("/disponibles")
+    @GetMapping("/user/{user_id}")
     @Operation(summary = "Obtener espacios disponibles", description = "Devuelve una lista de todos los espacios disponibles.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de espacios obtenida con éxito"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public ResponseEntity<List<EspacioParqueadero>> obtenerDisponibles() {
-        return ResponseEntity.ok(espacioParqueaderoService.obtenerDisponibles());
-    }
-
-
-
-    // ➕ Asignar un vehículo a un espacio (marcar como ocupado)
-    @PostMapping("/{numero}/asignar")
-    @Operation(summary = "Asignar vehículo a un espacio", description = "Asigna un vehículo a un espacio de parqueadero.")
-    public ResponseEntity<EspacioParqueadero> asignarVehiculo(
-            @PathVariable int numero,
-            @RequestBody @Parameter(description = "Datos del vehículo") Vehiculo vehiculo) {
-
-        EspacioParqueadero espacioActualizado = espacioParqueaderoService.asignarVehiculo(numero, vehiculo);
-        if (espacioActualizado == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<List<EspacioParqueadero>> obtenerUsuario(@RequestHeader("Authorization") String authHeader, @PathVariable @Parameter(description = "ID del usuario") Integer user_id) {
+        String token = jwtService.extractToken(authHeader);
+        if (!jwtService.validateJwtToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(espacioActualizado);
+        return ResponseEntity.ok(espacioParqueaderoService.findAllByUserID(user_id));
     }
+
 
     // ➕ Liberar un espacio (remover vehículo)
-    @PutMapping("/{numero}/liberar")
+    @PutMapping("/liberar")
     @Operation(summary = "Liberar un espacio", description = "Libera un espacio de parqueadero.")
     public ResponseEntity<EspacioParqueadero> liberarEspacio(
-            @PathVariable int numero) {
-
-        EspacioParqueadero espacioLiberado = espacioParqueaderoService.liberarEspacio(numero);
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam Integer user_id,
+            @RequestParam int numero) {
+        String token = jwtService.extractToken(authHeader);
+        if (!jwtService.validateJwtToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        EspacioParqueadero espacioLiberado = espacioParqueaderoService.liberarEspacio(user_id, numero);
         if (espacioLiberado == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(espacioLiberado);
     }
-    
-    @PostMapping("/ingresar/{idEspacio}")
-    public EspacioParqueadero ingresarVehiculo(@RequestBody Vehiculo vehiculo, @PathVariable int idEspacio) {
-        return espacioParqueaderoService.ingresarVehiculoEnEspacio(idEspacio, vehiculo);
+
+    @PostMapping("/ingresar")
+    public ResponseEntity<EspacioParqueadero> ingresarVehiculo(@RequestHeader("Authorization") String authHeader, @RequestBody Vehiculo vehiculo, @RequestParam Integer user_id, @RequestParam int numero) {
+        String token = jwtService.extractToken(authHeader);
+        if (!jwtService.validateJwtToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        EspacioParqueadero espacioParqueadero = espacioParqueaderoService.ingresarVehiculoEnEspacio(user_id, numero, vehiculo);
+        return new ResponseEntity<>(espacioParqueadero, HttpStatus.OK);
     }
 
 }
