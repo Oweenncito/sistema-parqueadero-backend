@@ -1,27 +1,39 @@
 package main.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import main.dto.LoginDTO;
+import main.dto.LoginResponseDTO;
 import main.model.Usuario;
 import main.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
-        initSampleData();
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     // Crear usuario
     public Usuario saveUser(Usuario usuario) {
-        return usuarioRepository.SaveUser(usuario);
+        Optional<Usuario> aux = usuarioRepository.findByCorreo(usuario.getCorreo());
+        if (aux.isPresent()){
+            throw new IllegalArgumentException("El correo ya se encuentra registrado");
+        }
+        usuario.setContraseña(passwordEncoder.encode(usuario.getContraseña()));
+        return usuarioRepository.save(usuario);
     }
 
     // Obtener todos los usuarios
@@ -30,33 +42,34 @@ public class UsuarioService {
     }
 
     // Obtener usuario por ID
-    public Optional<Usuario> findByID(String id) {
-        return usuarioRepository.findByID(id);
+    public Optional<Usuario> findByID(Integer id) {
+        return usuarioRepository.findById(id);
     }
 
     // Actualizar usuario
-    public Optional<Usuario> updateUser(String id, Usuario usuario) {
-        return usuarioRepository.updateUser(id, usuario);
+    public Usuario actualizarUsuario(Usuario usuario) {
+        if (usuarioRepository.existsById(usuario.getId())) {
+            return usuarioRepository.save(usuario); // Actualiza
+        } else {
+            throw new EntityNotFoundException("Usuario no encontrado");
+        }
     }
 
     // Eliminar usuario
-    public boolean deleteUser(String id) {
-        return usuarioRepository.deleteUser(id);
+    public void deleteUser(Integer id) {
+        usuarioRepository.deleteById(id);
     }
 
     // Buscar usuarios por nombre y correo
-    public List<Usuario> searchUsers(String nombre, String correo) {
-        return usuarioRepository.searchUsers(nombre, correo);
+    public Usuario searchUsers(LoginDTO loginDTO) {
+        Optional<Usuario> aux = usuarioRepository.findByCorreo(loginDTO.getUser());
+        if (aux.isEmpty()){
+            throw new EntityNotFoundException("No se ha encontrado el usuario");
+        }
+        if (!passwordEncoder.matches(loginDTO.getPassword(), aux.get().getContraseña())) {
+            throw new IllegalArgumentException("Las contraseñas no coinciden");
+        }
+        return aux.get();
     }
 
-    // Inicializar datos de ejemplo
-    private void initSampleData() {
-        Usuario usuario1 = new Usuario("owenfernando08@gmail.com", "Owen", "456");
-        Usuario usuario2 = new Usuario("juanDavid@gmail.com", "Juan David", "789");
-        Usuario usuario3 = new Usuario("danielaAguirre@gmail.com", "Daniela", "123");
-
-        usuarioRepository.SaveUser(usuario1);
-        usuarioRepository.SaveUser(usuario2);
-        usuarioRepository.SaveUser(usuario3);
-    }
 }

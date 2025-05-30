@@ -1,7 +1,10 @@
 package main.service;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import main.model.Vehiculo;
 import main.repository.VehiculoRepository;
@@ -9,32 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-
+//clase service de vehiculo
 @Service
 public class VehiculoService {
 
+    //llamamos al repository de vehiculo 
     private final VehiculoRepository vehiculoRepository;
 
+
+    /*lo pasamos por parametro en el constructor y lo inicializamos para poder interactuar entre el repositorio 
+      y el servicio
+    */
     @Autowired
     public VehiculoService(VehiculoRepository vehiculoRepository) {
         this.vehiculoRepository = vehiculoRepository;
-        initSampleData();
-        }
-    
-    public void initSampleData() {
-        Vehiculo vehiculo1 = new Vehiculo("TBI67G", "MOTO", "AKT", "NEGRO MATE");
-        Vehiculo vehiculo2 = new Vehiculo("ALV17E", "MOTO", "UNI-K", "NEGRO");
-        Vehiculo vehiculo3 = new Vehiculo("DGH45E",  "CARRO",  "CHEVROLET", "BLANCO");
-        Vehiculo vehiculo4 = new Vehiculo("FTJ67G", "CARRO", "TWINGO", "GRIS");
-       
-        vehiculoRepository.save(vehiculo1);
-        vehiculoRepository.save(vehiculo2);
-        vehiculoRepository.save(vehiculo3);
-        vehiculoRepository.save(vehiculo4);
 
     }
-
-    // Registrar vehículo
     public Vehiculo registrarVehiculo(Vehiculo vehiculo) {
         return vehiculoRepository.save(vehiculo);
     }
@@ -45,12 +38,13 @@ public class VehiculoService {
     }
 
     // Buscar por ID
-    public Vehiculo buscarPorId(String id) {
-        Vehiculo vehiculo = vehiculoRepository.findById(id);
-        if (vehiculo == null) {
-            throw new NoSuchElementException("Vehículo no encontrado con ID: " + id);
-        }
-        return vehiculo;
+    public Optional<Vehiculo> buscarPorId(Integer id) {
+        return vehiculoRepository.findById(id);
+
+    }
+
+    public List<Vehiculo> findAllByUsuario_Id(Integer id) {
+        return vehiculoRepository.findAllByUsuario_Id(id);
     }
 
     // Buscar por placa
@@ -63,24 +57,26 @@ public class VehiculoService {
     }
 
     // Eliminar por ID
-    public void eliminarPorId(String id) {
-        boolean eliminado = vehiculoRepository.deleteById(id);
-        if (!eliminado) {
-            throw new NoSuchElementException("No se pudo eliminar. Vehículo no encontrado con ID: " + id);
+    public void eliminarPorId(Integer id) {
+        if (!vehiculoRepository.existsById(id)) {
+            throw new EntityNotFoundException("No se encontró el vehículo con ID: " + id);
         }
+        vehiculoRepository.deleteById(id);
+
+    }
+
+    public boolean existsByPlaca(String placa) {
+        return vehiculoRepository.existsByPlaca(placa);
     }
 
     // Eliminar por placa
     public void eliminarPorPlaca(String placa) {
-        boolean eliminado = vehiculoRepository.eliminarPorPlaca(placa);
-        if (!eliminado) {
-            throw new NoSuchElementException("No se pudo eliminar. Vehículo no encontrado con placa: " + placa);
-        }
+        vehiculoRepository.deleteByPlaca(placa);
     }
 
     // Contar vehículos
     public int contarVehiculos() {
-        return vehiculoRepository.count();
+        return (int) vehiculoRepository.count();
     }
-    
+
 }
